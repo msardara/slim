@@ -68,10 +68,10 @@ esac
 task -v data-plane:build:strip TARGET=${RUSTARCH}-unknown-linux-gnu PROFILE=release
 mv target/${RUSTARCH}-unknown-linux-gnu target/${TARGETARCH}-unknown-linux-gnu
 
-pushd integrations/mcp/mcp-proxy
-task -v mcp-proxy:build:strip TARGET=${RUSTARCH}-unknown-linux-gnu PROFILE=release
-mv target/${RUSTARCH}-unknown-linux-gnu target/${TARGETARCH}-unknown-linux-gnu
-popd
+# pushd integrations/mcp/mcp-proxy
+# task -v mcp-proxy:build:strip TARGET=${RUSTARCH}-unknown-linux-gnu PROFILE=release
+# mv target/${RUSTARCH}-unknown-linux-gnu target/${TARGETARCH}-unknown-linux-gnu
+# popd
 EOF
 
 # runtime images  - debug executable, debug symbols and, most importantly, a shell :)

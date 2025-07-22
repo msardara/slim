@@ -365,7 +365,7 @@ mod tests {
         // Set up a JWT signer
         let signer = JwtBuilder::new()
             .issuer("test-issuer")
-            .audience("test-audience")
+            .audience(&["test-audience"])
             .subject("test-subject")
             .private_key(&Key {
                 algorithm: Algorithm::HS256,
@@ -397,7 +397,7 @@ mod tests {
         // Set up a JWT signer
         let signer = JwtBuilder::new()
             .issuer("test-issuer")
-            .audience("test-audience")
+            .audience(&["test-audience"])
             .subject("test-subject")
             .private_key(&Key {
                 algorithm: Algorithm::HS256,
@@ -480,7 +480,7 @@ mod tests {
         // Set up a JWT signer and verifier with the same key
         let signer = JwtBuilder::new()
             .issuer("test-issuer")
-            .audience("test-audience")
+            .audience(&["test-audience"])
             .subject("test-subject")
             .private_key(&Key {
                 algorithm: Algorithm::HS256,
@@ -491,7 +491,7 @@ mod tests {
 
         let verifier = JwtBuilder::new()
             .issuer("test-issuer")
-            .audience("test-audience")
+            .audience(&["test-audience"])
             .subject("test-subject")
             .public_key(&Key {
                 algorithm: Algorithm::HS256,
@@ -537,7 +537,7 @@ mod tests {
         // Set up a JWT verifier
         let verifier = JwtBuilder::new()
             .issuer("test-issuer")
-            .audience("test-audience")
+            .audience(&["test-audience"])
             .subject("test-subject")
             .public_key(&Key {
                 algorithm: Algorithm::HS256,
@@ -555,7 +555,7 @@ mod tests {
         // Set up a JWT signer with the same key as the verifier
         let signer = JwtBuilder::new()
             .issuer("test-issuer")
-            .audience("test-audience")
+            .audience(&["test-audience"])
             .subject("test-subject")
             .private_key(&Key {
                 algorithm: Algorithm::HS256,
@@ -638,7 +638,7 @@ mod tests {
         // Set up a JWT signer and verifier with the same key
         let signer = JwtBuilder::new()
             .issuer("test-issuer")
-            .audience("test-audience")
+            .audience(&["test-audience"])
             .subject("test-subject")
             .private_key(&Key {
                 algorithm: Algorithm::HS256,
@@ -650,7 +650,7 @@ mod tests {
 
         let verifier = JwtBuilder::new()
             .issuer("test-issuer")
-            .audience("test-audience")
+            .audience(&["test-audience"])
             .subject("test-subject")
             .public_key(&Key {
                 algorithm: Algorithm::HS256,
@@ -699,7 +699,7 @@ mod tests {
 
         // Check the claims are as expected
         assert_eq!(ret_claims.iss, Some("test-issuer".to_string()));
-        assert_eq!(ret_claims.aud, Some("test-audience".to_string()));
+        assert_eq!(ret_claims.aud, Some(vec!["test-audience".to_string()]));
         assert_eq!(ret_claims.sub, Some("test-subject".to_string()));
         assert_eq!(
             ret_claims.custom_claims.get("claim1"),

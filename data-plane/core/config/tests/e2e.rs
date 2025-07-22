@@ -290,7 +290,7 @@ mod tests {
         let claims = slim_config::auth::jwt::Claims::default()
             .with_issuer("test-issuer")
             .with_subject("test-subject")
-            .with_audience("test-audience");
+            .with_audience(&["test-audience"]);
 
         let client_config = ClientAuthenticationConfig::Jwt(JwtAuthConfig::new(
             claims.clone(),
@@ -541,7 +541,7 @@ mod tests {
         let claims = slim_config::auth::jwt::Claims::default()
             .with_issuer(mock_server.uri())
             .with_subject("test-subject")
-            .with_audience("test-audience");
+            .with_audience(&["test-audience"]);
 
         let client_config = ClientAuthenticationConfig::Jwt(JwtAuthConfig::new(
             claims.clone(),

@@ -1,0 +1,9 @@
+apiVersion: spire.spiffe.io/v1alpha1
+kind: ClusterSPIFFEID
+metadata:
+  name: slim-demo
+spec:
+  spiffeIDTemplate: "spiffe://slim.demo/{{ .Release.Namespace }}/{{`{{ .PodMeta.Namespace }}`}}/sa/{{`{{ .PodSpec.ServiceAccountName }}`}}"
+  namespaceSelector:
+    matchLabels:
+      name: "demo"

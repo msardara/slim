@@ -140,7 +140,7 @@ mcpProxy:
     #   memory: 128Mi
 
 spire:
-  enabled: false
+  enabled: true
   helperImage:
     repository: ghcr.io/spiffe/spiffe-helper
     # This sets the pull policy for images.

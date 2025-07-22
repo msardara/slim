@@ -1,0 +1,15 @@
+dependencies:
+- name: slim-client
+  repository: file://../../charts/slim-client
+  version: 0.1.0
+- name: slim-client
+  repository: file://../../charts/slim-client
+  version: 0.1.0
+- name: slim-client
+  repository: file://../../charts/slim-client
+  version: 0.1.0
+- name: slim-client
+  repository: file://../../charts/slim-client
+  version: 0.1.0
+digest: sha256:487846ff3ad335d9365067939e4016765f28f11cc25d1cb69532cc300bd1b59e
+generated: "2025-07-21T20:11:00.878953+02:00"

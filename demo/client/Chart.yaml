@@ -1,0 +1,38 @@
+# Copyright AGNTCY Contributors (https://github.com/agntcy)
+# SPDX-License-Identifier: Apache-2.0
+---
+apiVersion: v2
+name: slim-demo
+description: Slim Demo
+type: application
+version: 0.1.0
+appVersion: "0.1.0"
+dependencies:
+  - name: slim-client
+    version: 0.1.0
+    repository: "file://../../charts/slim-client"
+    condition: slim-1.enabled
+    alias: slim-client-1
+    tags:
+      - demo
+  - name: slim-client
+    version: 0.1.0
+    repository: "file://../../charts/slim-client"
+    condition: slim-2.enabled
+    alias: slim-client-2
+    tags:
+      - demo
+  - name: slim-client
+    version: 0.1.0
+    repository: "file://../../charts/slim-client"
+    condition: slim-3.enabled
+    alias: slim-client-3
+    tags:
+      - demo
+  - name: slim-client
+    version: 0.1.0
+    repository: "file://../../charts/slim-client"
+    condition: slim-4.enabled
+    alias: slim-client-4
+    tags:
+      - demo

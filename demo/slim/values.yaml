@@ -1,0 +1,28 @@
+slim-x: &slim
+  enabled: true
+  serviceAccount:
+    name: slim
+  slim:
+    image:
+      repository: localhost:5001/slim
+      tag: demo
+
+slim-1:
+  <<: *slim
+  serviceAccount:
+    name: slim-1
+
+slim-2:
+  <<: *slim
+  serviceAccount:
+    name: slim-2
+
+slim-3:
+  <<: *slim
+  serviceAccount:
+    name: slim-3
+
+slim-4:
+  <<: *slim
+  serviceAccount:
+    name: slim-4

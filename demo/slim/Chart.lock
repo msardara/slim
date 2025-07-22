@@ -1,0 +1,15 @@
+dependencies:
+- name: slim
+  repository: file://../../charts/slim
+  version: 0.1.8
+- name: slim
+  repository: file://../../charts/slim
+  version: 0.1.8
+- name: slim
+  repository: file://../../charts/slim
+  version: 0.1.8
+- name: slim
+  repository: file://../../charts/slim
+  version: 0.1.8
+digest: sha256:c276b08bc0b627f8b24c9fdb5c4f34010b9333ee90e17311ed172d286c094a2b
+generated: "2025-07-21T15:53:18.055192+02:00"

@@ -1,0 +1,6 @@
+apiVersion: spire.spiffe.io/v1alpha1
+kind: ClusterSPIFFEID
+metadata:
+  name: slim-workloads
+spec:
+  spiffeIDTemplate: "spiffe://domain.test/ns/{{ .PodMeta.Namespace }}/sa/{{ .PodSpec.ServiceAccountName }}"

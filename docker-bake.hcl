@@ -6,12 +6,12 @@
 
 # Docker build args
 variable "IMAGE_REPO" { default = "" }
-variable "IMAGE_TAG" { default = "v0.0.0-dev" }
+variable "IMAGE_TAG" { default = "latest" }
 
 function "get_tag" {
   params = [tags, name]
   // Check if IMAGE_REPO ends with name to avoid repetition
-  result = [for tag in tags:
+  result = [for tag in coalescelist(tags, [IMAGE_TAG]):
     can(regex("${name}$", IMAGE_REPO)) ?
       "${IMAGE_REPO}:${tag}" :
       "${IMAGE_REPO}/${name}:${tag}"
@@ -36,7 +36,6 @@ target "_common" {
   ]
   platforms = [
     "linux/arm64",
-    "linux/amd64",
   ]
 }
 
@@ -63,7 +62,18 @@ target "slim-debug" {
     "_common",
     "docker-metadata-action",
   ]
-  tags = get_tag(target.docker-metadata-action.tags, "${target.slim-debug.name}")
+  tags = get_tag(coalescelist(target.docker-metadata-action.tags, ["latest"]), "${target.slim-debug.name}")
+}
+
+target "slim-bindings-examples" {
+  context = "."
+  dockerfile = "./data-plane/python-bindings/examples/Dockerfile"
+  target = "slim-bindings-examples"
+  inherits = [
+    "_common",
+    "docker-metadata-action",
+  ]
+  tags = get_tag(target.docker-metadata-action.tags, "${target.slim-bindings-examples.name}")
 }
 
 target "mcp-proxy" {

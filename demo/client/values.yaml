@@ -1,0 +1,28 @@
+slim-client-x: &slim-client
+  enabled: true
+  serviceAccount:
+    name: slim-client
+  slim-client:
+    image:
+      repository: localhost:5001/slim-bindings-examples
+      tag: latest
+
+slim-client-1:
+  <<: *slim-client
+  serviceAccount:
+    name: slim-client-1
+
+# slim-client-2:
+#   <<: *slim-client
+#   serviceAccount:
+#     name: slim-client-2
+
+# slim-client-3:
+#   <<: *slim-client
+#   serviceAccount:
+#     name: slim-client-3
+
+# slim-client-4:
+#   <<: *slim-client
+#   serviceAccount:
+#     name: slim-client-4

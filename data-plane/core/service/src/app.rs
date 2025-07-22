@@ -702,13 +702,15 @@ where
     ) -> Result<bool, SessionError> {
         match session_message_type {
             ProtoSessionMessageType::ChannelDiscoveryRequest => {
-                // reply direcetly without creating any new Session
+                // reply directly without creating any new Session
                 let msg = handle_channel_discovery_message(
                     message,
                     self.agent_name(),
                     session_id,
                     session_type,
                 );
+
+                debug!(?msg, "replying to channel discovery request");
 
                 self.transmitter
                     .send_to_slim(Ok(msg))

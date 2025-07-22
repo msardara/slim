@@ -102,7 +102,9 @@ where
                     // Identity is valid, we can proceed
                     Ok(())
                 }
-                Err(_e) => {
+                Err(e) => {
+                    tracing::error!("Identity verification failed: {}", e.to_string());
+
                     // Try async verification if the sync one fails
                     let _claims = self
                         .verifier

@@ -64,7 +64,10 @@ where
 
         self.identity_verifier
             .try_verify::<EmptyClaims>(&identity)
-            .map_err(|e| SlimIdentityError::VerificationFailed(e.to_string()))?;
+            .map_err(|e| {
+                tracing::error!("error2: {}", e);
+                SlimIdentityError::VerificationFailed(e.to_string())
+            })?;
 
         Ok(())
     }
@@ -80,7 +83,10 @@ where
 
         self.identity_verifier
             .try_verify::<EmptyClaims>(&identity)
-            .map_err(|e| SlimIdentityError::ExternalSenderFailed(e.to_string()))?;
+            .map_err(|e| {
+                tracing::error!("error1: {}", e);
+                SlimIdentityError::ExternalSenderFailed(e.to_string())
+            })?;
 
         Ok(())
     }
