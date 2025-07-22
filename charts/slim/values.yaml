@@ -17,31 +17,7 @@ slim:
     # Overrides the image tag whose default is the chart appVersion.
     tag: ""
 
-  config:
-    tracing:
-      log_level: debug
-      display_thread_names: true
-      display_thread_ids: true
-
-    runtime:
-      n_cores: 0
-      thread_name: "slim-data-plane"
-      drain_timeout: 10s
-
-    services:
-      slim/0:
-        pubsub:
-          servers:
-            - endpoint: "0.0.0.0:46357"
-              tls:
-                insecure: true
-
-          clients: []
-        controller:
-          server:
-            endpoint: "0.0.0.0:46358"
-            tls:
-              insecure: true
+  config: {}
 
   # This is for setting up a service more information can be found here: https://kubernetes.io/docs/concepts/services-networking/service/
   service:

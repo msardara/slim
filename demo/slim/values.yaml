@@ -1,38 +1,3 @@
-slim-x: &slim
-  enabled: true
-  serviceAccount:
-    name: slim
-  slim:
-    image:
-      repository: localhost:5001/slim
-      tag: demo
-  config:
-    tracing:
-      log_level: debug
-      display_thread_names: true
-      display_thread_ids: true
-
-    runtime:
-      n_cores: 0
-      thread_name: "slim-data-plane"
-      drain_timeout: 10s
-
-    services:
-      slim/0:
-        pubsub:
-          servers:
-            - endpoint: "0.0.0.0:46357"
-              tls:
-                insecure: true
-
-          clients: []
-        controller:
-          servers: []
-          clients: []
-          static_config:
-            connections: []
-            subscriptions: []
-
 slim-1:
   enabled: true
   serviceAccount:
@@ -53,7 +18,7 @@ slim-1:
         drain_timeout: 10s
 
       services:
-        slim/0:
+        slim/1:
           pubsub:
             servers:
               - endpoint: "0.0.0.0:46357"
@@ -100,7 +65,7 @@ slim-2:
         drain_timeout: 10s
 
       services:
-        slim/0:
+        slim/2:
           pubsub:
             servers:
               - endpoint: "0.0.0.0:46357"
@@ -147,7 +112,7 @@ slim-3:
         drain_timeout: 10s
 
       services:
-        slim/0:
+        slim/3:
           pubsub:
             servers:
               - endpoint: "0.0.0.0:46357"
@@ -195,7 +160,7 @@ slim-4:
         drain_timeout: 10s
 
       services:
-        slim/0:
+        slim/4:
           pubsub:
             servers:
               - endpoint: "0.0.0.0:46357"

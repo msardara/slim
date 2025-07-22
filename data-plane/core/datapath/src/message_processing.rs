@@ -322,6 +322,24 @@ impl MessageProcessor {
                 // reset header fields
                 msg.clear_slim_header();
 
+                let in_connection = msg.get_incoming_conn();
+
+                let in_connection =
+                    self.forwarder()
+                        .get_connection(in_connection)
+                        .ok_or_else(|| {
+                            DataPathError::SubscriptionError("connection not found".to_string())
+                        })?;
+
+                // if the message doe not come from a local application and it is not for a local application,
+                // print the payload
+                if !in_connection.is_local_connection() && !conn.is_local_connection() {
+                    if let Some(p) = msg.get_payload() {
+                        // print as chars
+                        let chars = String::from_utf8_lossy(&p.blob);
+                        info!(%chars, "payload of message");
+                    }
+                }
                 // telemetry ////////////////////////////////////////////////////////
                 let parent_context = extract_parent_context(&msg);
                 let span = create_span("send_message", out_conn, &msg);
@@ -405,20 +423,6 @@ impl MessageProcessor {
             "received publication from connection {}: {:?}",
             in_connection, msg
         );
-
-        let connection = self
-            .forwarder()
-            .get_connection(in_connection)
-            .ok_or_else(|| DataPathError::SubscriptionError("connection not found".to_string()))?;
-
-        // print the message if it is not coming from a local connection
-        if !connection.is_local_connection() {
-            if let Some(p) = msg.get_payload() {
-                // print as chars
-                let chars = String::from_utf8_lossy(&p.blob);
-                info!(?chars, "payload of message");
-            }
-        }
 
         // telemetry /////////////////////////////////////////
         info!(
