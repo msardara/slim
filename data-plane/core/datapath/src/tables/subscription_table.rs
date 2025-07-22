@@ -249,8 +249,9 @@ impl AgentTypeState {
 
                         // We cannot return any connection for this agent id
                         debug!(
-                            "cannot find out connection, agent id does not exists {:?}",
-                            id
+                            "cannot find out connection, agent id does not exists {:?} ({} connections available)",
+                            id,
+                            self.connections[index].index.len()
                         );
                         None
                     }

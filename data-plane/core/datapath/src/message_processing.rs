@@ -406,6 +406,20 @@ impl MessageProcessor {
             in_connection, msg
         );
 
+        let connection = self
+            .forwarder()
+            .get_connection(in_connection)
+            .ok_or_else(|| DataPathError::SubscriptionError("connection not found".to_string()))?;
+
+        // print the message if it is not coming from a local connection
+        if !connection.is_local_connection() {
+            if let Some(p) = msg.get_payload() {
+                // print as chars
+                let chars = String::from_utf8_lossy(&p.blob);
+                info!(?chars, "payload of message");
+            }
+        }
+
         // telemetry /////////////////////////////////////////
         info!(
             telemetry = true,

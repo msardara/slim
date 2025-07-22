@@ -370,10 +370,6 @@ impl<V> Jwt<V> {
         // Derive a validation using the same algorithm
         let mut validation = self.get_validation(token_header.alg);
 
-        tracing::error!(?validation, "Verifying token with header");
-
-        tracing::error!(%token, "Verifying token");
-
         // Decode and verify the token
         let token_data: TokenData<Claims> =
             decode(&token, &decoding_key, &validation).map_err(|e| match e.kind() {

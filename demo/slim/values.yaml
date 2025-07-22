@@ -6,23 +6,239 @@ slim-x: &slim
     image:
       repository: localhost:5001/slim
       tag: demo
+  config:
+    tracing:
+      log_level: debug
+      display_thread_names: true
+      display_thread_ids: true
+
+    runtime:
+      n_cores: 0
+      thread_name: "slim-data-plane"
+      drain_timeout: 10s
+
+    services:
+      slim/0:
+        pubsub:
+          servers:
+            - endpoint: "0.0.0.0:46357"
+              tls:
+                insecure: true
+
+          clients: []
+        controller:
+          servers: []
+          clients: []
+          static_config:
+            connections: []
+            subscriptions: []
 
 slim-1:
-  <<: *slim
+  enabled: true
   serviceAccount:
     name: slim-1
+  slim:
+    image:
+      repository: localhost:5001/slim
+      tag: demo
+    config:
+      tracing:
+        log_level: debug
+        display_thread_names: true
+        display_thread_ids: true
+
+      runtime:
+        n_cores: 0
+        thread_name: "slim-data-plane"
+        drain_timeout: 10s
+
+      services:
+        slim/0:
+          pubsub:
+            servers:
+              - endpoint: "0.0.0.0:46357"
+                tls:
+                  insecure: true
+
+            clients: []
+          controller:
+            servers: []
+            clients: []
+            static_config:
+              connections: []
+              subscriptions:
+                - org: "agntcy"
+                  namespace: "demo"
+                  agent: "participant-2"
+                  connection: 1
+                - org: "agntcy"
+                  namespace: "demo"
+                  agent: "participant-3"
+                  connection: 1
+                - org: "agntcy"
+                  namespace: "demo"
+                  agent: "stream"
+                  connection: 1
 
 slim-2:
-  <<: *slim
+  enabled: true
   serviceAccount:
     name: slim-2
+  slim:
+    image:
+      repository: localhost:5001/slim
+      tag: demo
+    config:
+      tracing:
+        log_level: debug
+        display_thread_names: true
+        display_thread_ids: true
+
+      runtime:
+        n_cores: 0
+        thread_name: "slim-data-plane"
+        drain_timeout: 10s
+
+      services:
+        slim/0:
+          pubsub:
+            servers:
+              - endpoint: "0.0.0.0:46357"
+                tls:
+                  insecure: true
+
+            clients: []
+          controller:
+            servers: []
+            clients: []
+            static_config:
+              connections: []
+              subscriptions:
+                - org: "agntcy"
+                  namespace: "demo"
+                  agent: "participant-1"
+                  connection: 1
+                - org: "agntcy"
+                  namespace: "demo"
+                  agent: "participant-3"
+                  connection: 1
+                - org: "agntcy"
+                  namespace: "demo"
+                  agent: "stream"
+                  connection: 1
 
 slim-3:
-  <<: *slim
+  enabled: true
   serviceAccount:
     name: slim-3
+  slim:
+    image:
+      repository: localhost:5001/slim
+      tag: demo
+    config:
+      tracing:
+        log_level: debug
+        display_thread_names: true
+        display_thread_ids: true
+
+      runtime:
+        n_cores: 0
+        thread_name: "slim-data-plane"
+        drain_timeout: 10s
+
+      services:
+        slim/0:
+          pubsub:
+            servers:
+              - endpoint: "0.0.0.0:46357"
+                tls:
+                  insecure: true
+
+            clients: []
+          controller:
+            servers: []
+            clients: []
+            static_config:
+              connections: []
+              subscriptions:
+                - org: "agntcy"
+                  namespace: "demo"
+                  agent: "participant-1"
+                  connection: 1
+                - org: "agntcy"
+                  namespace: "demo"
+                  agent: "participant-2"
+                  connection: 1
+                - org: "agntcy"
+                  namespace: "demo"
+                  agent: "stream"
+                  connection: 1
+
 
 slim-4:
-  <<: *slim
+  enabled: true
   serviceAccount:
     name: slim-4
+  slim:
+    image:
+      repository: localhost:5001/slim
+      tag: demo
+    config:
+      tracing:
+        log_level: debug
+        display_thread_names: true
+        display_thread_ids: true
+
+      runtime:
+        n_cores: 0
+        thread_name: "slim-data-plane"
+        drain_timeout: 10s
+
+      services:
+        slim/0:
+          pubsub:
+            servers:
+              - endpoint: "0.0.0.0:46357"
+                tls:
+                  insecure: true
+
+            clients: []
+          controller:
+            servers: []
+            clients: []
+            static_config:
+              connections:
+                - endpoint: http://slim-slim-1:46357
+                  tls:
+                    insecure: true
+                - endpoint: http://slim-slim-2:46357
+                  tls:
+                    insecure: true
+                - endpoint: http://slim-slim-3:46357
+                  tls:
+                    insecure: true
+              subscriptions:
+                - org: "agntcy"
+                  namespace: "demo"
+                  agent: "participant-1"
+                  connection: 1
+                - org: "agntcy"
+                  namespace: "demo"
+                  agent: "participant-2"
+                  connection: 2
+                - org: "agntcy"
+                  namespace: "demo"
+                  agent: "participant-3"
+                  connection: 3
+                - org: "agntcy"
+                  namespace: "demo"
+                  agent: "stream"
+                  connection: 1
+                - org: "agntcy"
+                  namespace: "demo"
+                  agent: "stream"
+                  connection: 2
+                - org: "agntcy"
+                  namespace: "demo"
+                  agent: "stream"
+                  connection: 3

@@ -13,6 +13,21 @@ use slim_datapath::message_processing::MessageProcessor;
 
 use crate::service::ControlPlane;
 
+#[derive(Debug, Clone, Deserialize, Default)]
+pub struct Subscription {
+    pub org: String,
+    pub namespace: String,
+    pub agent: String,
+    pub connection: u64,
+}
+
+#[derive(Debug, Clone, Deserialize, Default)]
+pub struct StaticConfig {
+    pub connections: Vec<ClientConfig>,
+    pub subscriptions: Vec<Subscription>,
+}
+
+
 /// Configuration for the Control Plane component
 #[derive(Debug, Clone, Deserialize, Default)]
 pub struct Config {
@@ -23,6 +38,9 @@ pub struct Config {
     /// Controller client config to connect to control plane
     #[serde(default)]
     clients: Vec<ClientConfig>,
+
+    #[serde(default)]
+    static_config: Option<StaticConfig>,
 }
 
 impl Config {
@@ -61,6 +79,7 @@ impl Config {
             id,
             self.servers.clone(),
             self.clients.clone(),
+            self.static_config.clone(),
             rx_drain,
             message_processor,
         )

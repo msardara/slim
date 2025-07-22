@@ -23,6 +23,7 @@ use crate::api::proto::api::v1::{
     controller_service_client::ControllerServiceClient,
     controller_service_server::ControllerService as GrpcControllerService,
 };
+use crate::config::StaticConfig;
 use crate::errors::ControllerError;
 use slim_config::grpc::client::ClientConfig;
 use slim_datapath::api::ProtoMessage as PubsubMessage;
@@ -74,6 +75,12 @@ struct ControllerService {
 /// The ControlPlane service is the main entry point for the controller service.
 #[derive(Debug)]
 pub struct ControlPlane {
+    /// Static configuration for the control plane
+    static_config: Option<StaticConfig>,
+
+    /// tx slim
+    tx_slim: mpsc::Sender<Result<PubsubMessage, Status>>,
+
     /// servers
     servers: Vec<ServerConfig>,
 
@@ -112,6 +119,7 @@ impl ControlPlane {
         id: ID,
         servers: Vec<ServerConfig>,
         clients: Vec<ClientConfig>,
+        static_config: Option<StaticConfig>,
         drain_rx: drain::Watch,
         message_processor: Arc<MessageProcessor>,
     ) -> Self {
@@ -119,6 +127,8 @@ impl ControlPlane {
         let (_, tx_slim, rx_slim) = message_processor.register_local_connection();
 
         ControlPlane {
+            static_config,
+            tx_slim: tx_slim.clone(),
             servers,
             clients,
             controller: ControllerService {
@@ -169,6 +179,78 @@ impl ControlPlane {
         // run all clients
         for client in clients {
             self.run_client(client).await?;
+        }
+
+        // Apply the static configuration if provided
+        if let Some(static_config) = &self.static_config {
+            // if no connections are defined, sleep
+            if static_config.connections.is_empty() {
+                tokio::time::sleep(tokio::time::Duration::from_secs(5)).await;
+            }
+
+            // process connections
+            for conn in &static_config.connections {
+                info!("processing static connection: {}", conn.endpoint);
+
+                let channel = conn.to_channel().map_err(|e| {
+                    error!("error reading channel config: {}", e);
+                    ControllerError::ConfigError(e.to_string())
+                })?;
+
+                match self
+                    .controller
+                    .inner
+                    .message_processor
+                    .connect(channel, Some(conn.clone()), None, None)
+                    .await
+                {
+                    Ok((_, conn_id)) => {}
+                    Err(e) => {
+                        error!(
+                            "failed to connect to static connection {}: {}",
+                            conn.endpoint, e
+                        );
+                    }
+                }
+            }
+
+            // process subscriptions
+            for sub in &static_config.subscriptions {
+                info!(
+                    "subscribing to agent {} in organization {} and namespace {}",
+                    sub.agent, sub.org, sub.namespace
+                );
+
+                let source = Agent::from_strings(
+                    sub.org.as_str(),
+                    sub.namespace.as_str(),
+                    sub.agent.as_str(),
+                    0,
+                );
+                let agent_type = AgentType::from_strings(
+                    sub.org.as_str(),
+                    sub.namespace.as_str(),
+                    sub.agent.as_str(),
+                );
+                let conn_id = sub.connection;
+
+                let msg = PubsubMessage::new_subscribe(
+                    &source,
+                    &agent_type,
+                    None,
+                    Some(SlimHeaderFlags::default().with_recv_from(conn_id)),
+                );
+
+                self.tx_slim.send(Ok(msg)).await.map_err(|e| {
+                    error!("error sending message into datapath: {}", e);
+                    ControllerError::DatapathError(e.to_string())
+                })?;
+
+                info!(
+                    "subscribed to agent {} in organization {} and namespace {}, on connection {}",
+                    sub.agent, sub.org, sub.namespace, conn_id
+                );
+            }
         }
 
         Ok(())
@@ -816,6 +898,7 @@ mod tests {
             id_server,
             vec![server_config],
             vec![],
+            None,
             watch_server,
             Arc::new(message_processor_server),
         );
@@ -824,6 +907,7 @@ mod tests {
             id_client,
             vec![],
             vec![client_config],
+            None,
             watch_client,
             Arc::new(message_processor_client),
         );

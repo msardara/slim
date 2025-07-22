@@ -967,7 +967,6 @@ where
         match opt {
             Some(m) => {
                 let info = Info::from(&m);
-                tracing::error!("Sending packet to app");
                 let session_msg = SessionMessage::new(m, info);
                 // send message to the app
                 if let Err(e) = tx.send_to_app(Ok(session_msg)).await {
